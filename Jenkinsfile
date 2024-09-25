@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Clone the GitHub repository
-                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2'
+                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2.git'
             }
         }
         
