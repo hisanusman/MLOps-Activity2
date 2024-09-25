@@ -2,23 +2,21 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-id') // Set this in Jenkins credentials
-        DOCKER_IMAGE = 'hisanusman/MLOps-Activity2'
+        DOCKER_IMAGE = 'hisanusman/flasktest-app'
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-id')
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout SCM') {
             steps {
-                // Clone the GitHub repository
-                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2.git'
+                checkout scm
             }
         }
-        
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image
-                    sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
+                    docker.build("${DOCKER_IMAGE}:${BUILD_NUMBER}")
                 }
             }
         }
@@ -26,19 +24,15 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Log in to Docker Hub using credentials stored in Jenkins
-                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS) {}
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Tag and push the Docker image
-                    sh 'docker tag $DOCKER_IMAGE:$BUILD_NUMBER $DOCKER_IMAGE:latest'
-                    sh 'docker push $DOCKER_IMAGE:$BUILD_NUMBER'
-                    sh 'docker push $DOCKER_IMAGE:latest'
+                    docker.image("${DOCKER_IMAGE}:${BUILD_NUMBER}").push()
                 }
             }
         }
@@ -49,7 +43,7 @@ pipeline {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed.'
         }
     }
 }
