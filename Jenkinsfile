@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'hisanusman/flasktest-app'
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds-id')
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds-id'
     }
 
     stages {
