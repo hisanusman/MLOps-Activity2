@@ -10,16 +10,13 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Clone the GitHub repository
-                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2.git'
+                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2'
             }
         }
         
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Ensure Dockerfile exists
-                    sh 'test -f Dockerfile'
-
                     // Build the Docker image
                     sh 'docker build -t $DOCKER_IMAGE:$BUILD_NUMBER .'
                 }
