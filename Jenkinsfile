@@ -9,11 +9,11 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                // Clone the GitHub repository
-                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2.git'
+                // Clone the GitHub repository with credentials
+                git branch: 'main', url: 'https://github.com/hisanusman/MLOps-Activity2.git', credentialsId: 'github-creds-id'
             }
         }
-        
+
         stage('Build Docker Image') {
             steps {
                 script {
